@@ -1,6 +1,7 @@
 {
   description = "Rust dev shell template, used for bevy projects";
 
+  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
   outputs =
