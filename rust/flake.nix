@@ -1,33 +1,39 @@
 {
   description = "Rust dev shell template";
 
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-  inputs.flake-utils.url = "github:numtide/flake-utils";
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    rust-overlay.url = "github:oxalica/rust-overlay";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
 
   outputs =
     {
       self,
       nixpkgs,
+      rust-overlay,
       flake-utils,
     }:
     flake-utils.lib.eachDefaultSystem (
       system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ rust-overlay.overlays.default ];
+        };
+        toolchain = pkgs.rust-bin.fromRustupToolchainFile ./toolchain.toml;
       in
       {
         devShells.default =
           with pkgs;
           mkShell {
             packages = [
-              clippy
-              rustfmt
-              rust-analyzer
+              toolchain
+            ];
+            buildInputs = [
             ];
             nativeBuildInputs = [
-              cargo
               pkg-config
-              rustc
             ];
           };
       }
