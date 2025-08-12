@@ -23,7 +23,7 @@
         };
 
         # or nightly
-        toolchain = pkgs.rust-bin.stable.default.override {
+        toolchain = pkgs.rust-bin.stable.latest.default.override {
           extension = [
             "rust-src"
             "rust-analyzer"
