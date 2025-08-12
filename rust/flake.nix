@@ -21,7 +21,18 @@
           inherit system;
           overlays = [ rust-overlay.overlays.default ];
         };
-        toolchain = pkgs.rust-bin.fromRustupToolchainFile ./toolchain.toml;
+
+        # or nightly
+        toolchain = pkgs.rust-bin.stable.default.override {
+          extension = [
+            "rust-src"
+            "rust-analyzer"
+          ];
+        };
+
+        # For existing toolchain.
+        # toolchain = pkgs.rust-bin.fromRustupToolchainFile ./toolchain.toml;
+        # help at https://rust-lang.github.io/rustup/overrides.html#the-toolchain-file
       in
       {
         devShells.default =
@@ -35,6 +46,9 @@
             nativeBuildInputs = [
               pkg-config
             ];
+
+            # https://github.com/NixOS/nixpkgs/issues/177952#issuecomment-3172381779
+            NIX_NO_SELF_RPATH = true;
           };
       }
     );
